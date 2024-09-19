@@ -3,12 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Product
 from .serializers import ProductSerializer
-from .throttles import ProductThrottle, ProductDetailThrottle
+from .throttles import GetProductThrottle, PostProductThrottle, ProductDetailThrottle
 from django.shortcuts import get_object_or_404
 
 
 @api_view(['GET', 'POST'])
-@throttle_classes([ProductThrottle])  # Utilizing ProductThrottle for list and create
+@throttle_classes([PostProductThrottle, GetProductThrottle])  # Utilizing ProductThrottle for list and create
 def product_list_create_view(request):
     if request.method == 'GET':
         products = Product.objects.all()
