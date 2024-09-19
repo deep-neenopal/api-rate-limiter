@@ -81,13 +81,11 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle',
-    ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '3/minute',  # Global rate limit for anonymous user
-        'user': '1000/day',  # Global rate limit for authenticated user
+        'user': '20/minute',  # Define a default rate for 'user' throttle scope
+        'list_products': '5/minute',  # Rate limit for GET requests
+        'add_product': '2/minute',  # Rate limit for POST requests
+        'retrieve_product': '3/minute',  # Rate limit for retrieving a product
     },
 }
 
