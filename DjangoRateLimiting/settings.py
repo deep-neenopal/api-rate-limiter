@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,12 +85,28 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
-        'user': '20/minute',  # Define a default rate for 'user' throttle scope
-        'list_products': '5/minute',  # Rate limit for GET requests
+        'list_products': '2/minute',  # Rate limit for GET requests
         'add_product': '2/minute',  # Rate limit for POST requests
-        'retrieve_product': '3/minute',  # Rate limit for retrieving a product
+        'retrieve_product': '1/minute',  # Rate limit for retrieving a product
     },
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+    },
+    "alternate": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        'LOCATION': os.getenv('REDIS_URL'),
+        "OPTIONS": {
+            "DB": 1,
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'alternate'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
